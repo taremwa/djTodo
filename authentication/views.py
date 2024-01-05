@@ -20,7 +20,7 @@ def register(request):
 
         if len(password) < 6:
             messages.add_message(request,messages.ERROR,
-                                 'Password should atleast exceed 6 characters')
+                                 'Password should atleast exceed six characters')
             context['has_error'] = True
         
         if password != password2:
