@@ -4,5 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='home'),
-    path('', views.create_todo, name='create-todo'),
+    path('create/', views.create_todo, name='create-todo'),
+    path('todo/<id>', views.todo_detail, name='todo'),
+
 ]

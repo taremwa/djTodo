@@ -9,4 +9,12 @@
     <h3>Create Todo</h3>
 
 
+    <form class="ui form" method="POST" action="{% url 'create-todo' %}">
+        {%csrf_token%}
+        {{form.as_p}}
+
+        <input type="submit"  class="ui button primary" value="submit">
+    </form>
+
+
 {% endblock content %}
