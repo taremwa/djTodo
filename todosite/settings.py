@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+#Extending abstract user for authentication
+AUTH_USER_MODEL = "authentication.User"
 
 # Application definition
 
