@@ -6,9 +6,26 @@ from django.urls import reverse
 
 # Create your views here.
 
+def get_showing_todos(request, todos):
+
+    if request.GET and request.GET.get('filter'):
+        if request.GET.get('filter') == 'complete':
+            return todos.filter(is_completed=True)
+        if request.GET.get('filter') == 'incomplete':
+            return todos.filter(is_completed=False)
+    return todos
+
 def index(request):
     todos = Todo.objects.all()
-    context = {'todos': todos}
+
+    #filtering query sets
+    completed_count = todos.filter(is_completed=True).count()
+    incomplete_count = todos.filter(is_completed=False).count()
+    all_count = todos.count()
+
+    context = {'todos': get_showing_todos(request,todos), 'all_count':all_count,
+               'completed_count':completed_count,
+                'incomplete_count':incomplete_count}
     return render(request, 'todo/index.html', context)
 
 def create_todo(request):

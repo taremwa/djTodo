@@ -57,6 +57,21 @@
             {% endfor %}
 
         </tbody>
+
+        <tfoot>
+            <tr>
+                <th>
+                    <a href="?filter=all">All {{all_count}}</a>
+                </th>
+                <th>
+                    <a href="?filter=incomplete">{{incomplete_count}} Remaining</a>
+                </th>
+                <th>
+                    <a href="?filter=completed">{{completed_count}} Completed</a>
+                </th>
+                <th> </th>
+            </tr>
+        </tfoot>
     </table>
 
     {% else %}
