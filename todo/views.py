@@ -3,6 +3,7 @@ from .forms import TodoForm
 from . models import Todo
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
@@ -54,4 +55,6 @@ def create_todo(request):
 
 
 def todo_detail(request, id):
-    return render(request, 'todo/todo-detail.html', {})
+    todo = get_object_or_404(Todo, pk=id)
+    context = {'todo': todo}
+    return render(request, 'todo/todo-detail.html', context)
