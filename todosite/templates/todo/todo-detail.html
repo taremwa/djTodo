@@ -32,7 +32,7 @@
             </p>
  
             {% endif %}
-            <a href="" class="ui button primary">Edit</a>
+            <a href="{% url 'todo-edit' todo.id %}" class="ui button primary">Edit</a>
             <a href="{% url 'todo-delete' todo.id %}" class="ui button red">Delete this todo</a>
         </div>
     </div>
