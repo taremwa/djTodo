@@ -58,3 +58,14 @@ def todo_detail(request, id):
     todo = get_object_or_404(Todo, pk=id)
     context = {'todo': todo}
     return render(request, 'todo/todo-detail.html', context)
+
+
+def todo_delete(request, id):
+    todo = get_object_or_404(Todo, pk=id)
+    context = {'todo': todo}
+
+    if request.method == "POST":
+        todo.delete()
+        return HttpResponseRedirect(reverse('home'))
+
+    return render(request, 'todo/todo-delete.html', context)
