@@ -8,6 +8,9 @@
     <img src="{% static 'img/Logo.png' %}" />
 
     <h1 class="ui header">My List of Todos</h1>
+
+    {% include '_partials/messages.html' %}
+
     {% if todos %}
 
     <table class="ui table">

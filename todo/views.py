@@ -4,7 +4,7 @@ from . models import Todo
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
-
+from django.contrib import messages
 # Create your views here.
 
 def get_showing_todos(request, todos):
@@ -47,6 +47,7 @@ def create_todo(request):
 
         todo.save()
 
+        messages.add_message(request, messages.SUCCESS, "Todo Created Sucessfully")
 
         return HttpResponseRedirect(reverse("todo", kwargs={'id': todo.pk}))
 
@@ -66,6 +67,9 @@ def todo_delete(request, id):
 
     if request.method == "POST":
         todo.delete()
+
+        messages.add_message(request, messages.SUCCESS, "Todo Deleted Sucessfully")
+
         return HttpResponseRedirect(reverse('home'))
 
     return render(request, 'todo/todo-delete.html', context)
@@ -88,6 +92,7 @@ def todo_edit(request, id):
 
         todo.save()
 
+        messages.add_message(request, messages.SUCCESS, "Todo Updated Sucessfully")
 
         return HttpResponseRedirect(reverse("todo", kwargs={'id': todo.pk})) 
 
