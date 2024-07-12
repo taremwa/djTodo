@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from validate_email import validate_email
 from .models import User
@@ -44,7 +44,7 @@ def register(request):
             context['has_error'] = True
 
         if context['has_error']:
-            return render(request, 'authentication/register.html')
+            return render(request, 'authentication/register.html', context)
         
 
         user = User.objects.create_user(username=username, email=email)
@@ -53,7 +53,7 @@ def register(request):
 
 
         messages.add_message(request, messages.SUCCESS,'Account Sucessfully created!, you can login')
-
+        return redirect('login')
 
     return render(request, 'authentication/register.html')
 
