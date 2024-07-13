@@ -15,8 +15,9 @@
             <div class="ui simple dropodown item">
                 {{request.user.username}}  <i class="dropdown icon"></i>
                 <div class="menu">
-                    <form class="ui large form" method="post" action="">
-                        <input class="ui button" type="submit" value="sign out">
+                    <form class="ui large form" method="post" action="{% url 'logout_user' %}">
+                        {% csrf_token %}
+                        <input class="ui button" type="submit" value="Sign out">
                     </form>
                 </div>
             </div>
