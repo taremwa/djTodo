@@ -17,7 +17,7 @@ def get_showing_todos(request, todos):
     return todos
 
 def index(request):
-    todos = Todo.objects.all()
+    todos = Todo.objects.filter(owner=request.user)
 
     #filtering query sets
     completed_count = todos.filter(is_completed=True).count()
@@ -44,7 +44,7 @@ def create_todo(request):
         todo.title = title
         todo.description = description
         todo.is_completed = True if is_completed=='on' else False
-
+        todo.owner = request.user
         todo.save()
 
         messages.add_message(request, messages.SUCCESS, "Todo Created Sucessfully")
