@@ -4,8 +4,11 @@ from validate_email import validate_email
 from .models import User
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
+from helpers.decorators import auth_user_should_not_access
+
 
 # Create your views here.
+@auth_user_should_not_access
 def register(request):
     if request.method == "POST":
         context = {'has_error': False, 'data': request.POST}
@@ -60,6 +63,7 @@ def register(request):
     return render(request, 'authentication/register.html')
 
 
+@auth_user_should_not_access
 def login_user(request):
     if request.method == 'POST':
         context = {'data':request.POST}
