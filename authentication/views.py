@@ -30,7 +30,7 @@ def register(request):
 
         if not validate_email(email):
             messages.add_message(request,messages.ERROR,
-                                 'Enter a valid email address')
+                                 'please enter a valid email address')
             context['has_error'] = True
 
         if not username:
