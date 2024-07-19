@@ -9,7 +9,9 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str, force_text, DjangoUnicodeDecodeError
-from utils import generate_token
+from .utils import generate_token
+from django.core.mail import EmailMessage
+from django.conf import settings
 
 
 def send_activation_email(user, request):
@@ -21,6 +23,12 @@ def send_activation_email(user, request):
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': generate_token.make_token(user)
     })
+
+    email = EmailMessage(subject=email_subject, body=email_body,
+                  from_email=settings.EMAIL_FROM_USER,
+                  to=[user.eamil]
+                  )
+    email.send()
 
 # Create your views here.
 @auth_user_should_not_access
@@ -131,3 +139,7 @@ def activate_user(request, uidb64, token):
 
         messages.add_message(request, messages.SUCCESS, 'Email verified, you can now login')
         return redirect(reverse('login'))
+    
+    return render(request, 'authentication/activation-failed.html', {
+        "user":user
+    })
