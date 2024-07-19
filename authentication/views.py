@@ -5,7 +5,22 @@ from .models import User
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from helpers.decorators import auth_user_should_not_access
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_bytes, force_str, force_text, DjangoUnicodeDecodeError
+from utils import generate_token
 
+
+def send_activation_email(user, request):
+    current_site = get_current_site(request)
+    email_subject = 'Activate your account'
+    email_body = render_to_string('authentication/activate.html', {
+        'user':user,
+        'domain':current_site,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': generate_token.make_token(user)
+    })
 
 # Create your views here.
 @auth_user_should_not_access
@@ -57,6 +72,8 @@ def register(request):
         user.save()
 
 
+        send_activation_email(user, request)
+
         messages.add_message(request, messages.SUCCESS,'Account Sucessfully created!, you can login')
         return redirect('login')
 
@@ -97,3 +114,20 @@ def logout_user(request):
 
     messages.add_message(request, messages.SUCCESS, 'Successfully logged out')
     return redirect(reverse('login'))
+
+
+def activate_user(request, uidb64, token):
+
+    try:
+        uid=force_text(urlsafe_base64_decode(uidb64))
+        user=User.objects.get(pk=uid)
+
+    except Exception as e:
+        user=None
+
+    if user and generate_token.check_token(user, token):
+        user.is_email_verified = True
+        user.save()
+
+        messages.add_message(request, messages.SUCCESS, 'Email verified, you can now login')
+        return redirect(reverse('login'))
