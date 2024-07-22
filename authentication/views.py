@@ -12,6 +12,17 @@ from django.utils.encoding import force_bytes, force_str, force_text, DjangoUnic
 from .utils import generate_token
 from django.core.mail import EmailMessage
 from django.conf import settings
+import threading
+
+
+class EmailThread(threading.Thread):
+
+    def __init__(self, email):
+        self.email = email
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.email.send()
 
 
 def send_activation_email(user, request):
@@ -26,9 +37,9 @@ def send_activation_email(user, request):
 
     email = EmailMessage(subject=email_subject, body=email_body,
                   from_email=settings.EMAIL_FROM_USER,
-                  to=[user.eamil]
+                  to=[user.email]
                   )
-    email.send()
+    EmailThread(email).start()
 
 # Create your views here.
 @auth_user_should_not_access
@@ -82,7 +93,7 @@ def register(request):
 
         send_activation_email(user, request)
 
-        messages.add_message(request, messages.SUCCESS,'Account Sucessfully created!, you can login')
+        messages.add_message(request, messages.SUCCESS,'We sent to an email to verify your account')
         return redirect('login')
 
     return render(request, 'authentication/register.html')
